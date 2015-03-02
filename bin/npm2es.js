@@ -109,7 +109,7 @@ function beginFollowing() {
     var that = this;
 
     if (!change.id) {
-      return console.log('SKIP', change);
+      return;// console.log('SKIP', change);
     }
 
     if (last + interval < change.seq) {
@@ -146,7 +146,7 @@ function beginFollowing() {
       var p = normalize(change.doc);
 
       if (!p || !p.name) {
-        console.log('SKIP: ' + change.doc._id);
+        //console.log('SKIP: ' + change.doc._id);
         return;
       }
 
@@ -161,14 +161,14 @@ function beginFollowing() {
         // 2) for the tarball
         // skip a re-index for #2
         if (!e && obj && obj._source && obj._source.version === p.version) {
-          console.log('SKIP VERSION:', change.doc._id, p.version);
+          //console.log('SKIP VERSION:', change.doc._id, p.version);
           that.resume();
         } else {
           obj = obj || {};
 
-          if (p.time) {
-            delete p.time;
-          }
+          delete p.time;
+          delete p.times;
+          delete p.scripts;
 
           request.put({
             url: argv.es + '/package/' + p.name,
